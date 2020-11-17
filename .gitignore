@@ -1,0 +1,12 @@
+#folders#
+.idea
+/target
+.classpath
+.project
+.settings/
+
+# Packaged files #
+*.jar
+*.war
+*.ear
+*.iml

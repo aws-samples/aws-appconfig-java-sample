@@ -1,0 +1,8 @@
+server:
+  address: 0.0.0.0
+  port: 80
+appconfig:
+  application: MyContainerApplication
+  environment: MyContainerApplicationProductionEnvironment
+  config: MyContainerApplicationConfigurationProfile
+  cacheTtlInSeconds: 30
