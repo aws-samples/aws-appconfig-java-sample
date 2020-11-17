@@ -22,11 +22,14 @@ This application has a Caching layer built in to cache the responses from AWS Ap
 
 ### **STEP 1: Create application, environments and configuration profile in AWS AppConfig**
 
-1. To get started, go to [AWS AppConfig](https://console.aws.amazon.com/systems-manager/appconfig) on the [AWS Console](https://console.aws.amazon.com/console/home)
-2. On the [AppConfig console](https://console.aws.amazon.com/systems-manager/appconfig) , click Create Configuration Data and specify the name of the application. You can add an optional description and apply tags to the application.
-3. Once the application is created, you will then be redirected to a page with Environments and Configuration Profiles tabs. Let’s start by creating an environment by clicking Create environment and specifying the environment name and optional description. You can also optionally add tags and configure CloudWatch alarms for this environment.
-4. Next, let’s set up a configuration profile. Select the Configuration Profiles tab, and click Create configuration profile. Provide the name of the configuration profile and an optional description and click Next.
-5. Next, select *AWS AppConfig hosted configuration* as the configuration source and specify the content of the configuration data. Within AWS AppConfig hosted configurations, you can store configurations either as text or in JSON or YAML formats. For the purposes of this blog, we will create an application configuration in JSON  with two parameters which will be used in the Container application code.
+1. Open the AWS Systems Manager console.
+2. In the left navigation pane, choose AWS AppConfig.
+3. If the AWS AppConfig welcome page appears, click Create configuration data. Otherwise, click Create application.
+4. For Name, enter a name for the application. (*MyContainerApplication*) You can add an optional description and apply tags to the application. Choose Create application.
+5. After the application is created, you are directed to a page with Environments and Configuration Profiles Choose Create environment, and then enter a name (MyContainerApplicationProductionEnvironment) and optional description for the environment. You can also optionally add tags and configure Amazon CloudWatch alarms for this environment.
+6. In the top navigation, choose the application name, and on the Configuration Profiles tab, choose Create configuration profile.
+7. Enter a name (*MyContainerApplicationConfigurationProfile*) and optional description for the configuration profile.
+8. Under Configuration source, choose AWS AppConfig hosted configuration.Under Content, choose JSON, paste the following content, and then choose Next.
 
 ```
     {
@@ -35,44 +38,41 @@ This application has a Caching layer built in to cache the responses from AWS Ap
     }
 ```
 
-1. Clicking Next, you can optionally add validators to validate the configuration. More information on adding validators can be found [here](https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-creating-configuration-and-profile-validators.html). Next, create the configuration by clicking Create configuration profile.
-2. Next, you can deploy the configuration by clicking Start deployment
-3. Choose the Environment , Hosted Configuration Version, Deployment Strategy and an Optional Description to Start the deployment process.
-4. You can either create a custom Deployment Strategy by clicking Create Deployment Strategy or select one of the pre-defined Deployment Strategies provided by AWS AppConfig. You can read more about the components of the deployment strategies [here](https://docs.aws.amazon.com/systems-manager/latest/userguide/appconfig-creating-deployment-strategy.html). For the purposes of this demo, we are selecting the “*AppConfig.Linear50PercentEvery30Seconds*” deployment strategy.
+9. (Optional) You can add validators to validate the configuration. For information, check [about validators](https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-creating-configuration-and-profile-validators.html) in the AWS AppConfig documentation.
+10. Choose Create configuration profile.
+11. Choose Start deployment.
+12. Choose the environment, hosted configuration version, deployment strategy, and an optional description to start the deployment process.
+13. To create a custom deployment strategy, choose Create Deployment Strategy. Or choose one of the predefined deployment strategies provided by AWS AppConfig. For more information, check [creating a deployment strategy](https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-creating-deployment-strategy.html) in the AWS AppConfig documentation. For the purposes of this post, we chose the *AppConfig.Linear50PercentEvery30Seconds* deployment strategy.
+
+Note: Depending on the deployment strategy you selected, this operation might take few minutes to complete. The configuration is available to the application as soon as the deployment state is Complete.
+
+### STEP 2: Set up the base application with Amazon ECS and Amazon ECR and associated network components using AWS CloudFormation
 
 
+1. Open [CloudFormation console](https://console.aws.amazon.com/cloudformation/home) and click on “Create stack”, selecting “With new resources” option.
+2. In the next screen, under the “Specify template” section choose “Upload template file“, and provide the file you downloaded from the repo */templates/ecs-cluster.yml.*
+3. Click next, give the stack a name like “ECSCluster-dev“, and choose dev as value for the Environment parameter.Click next, optionally define your tags, and click next again. On the last screen, don’t forget to tick the check box in the “Capabilities” section, and finally click on “Create stack” button.
+	
+### STEP 3: Clone the code repository, create a Docker container, and publish to Amazon ECR
 
-### STEP 2: Clone the Repository
+1. Git clone this [Repository](https://github.com/aws-samples/aws-appconfig-java-sample)
+2. Navigate to Amazon Elastic Container Registry console , click on the repository that you created and click View push commands.
+3. Navigate to the code repository in the command prompt and execute the push commands to upload the project.
+4. When the upload is complete, copy the URL of the image in the repository. Use this URL as an input parameter (ImageUrl) to the AWS CloudFormation template mentioned in the next section.
 
-1. Git clone this Repository
+### STEP 4: Create a Fargate task and deploy the container application into Amazon ECS on AWS Fargate using AWS CloudFormation
 
-### STEP 3: Containerize the Java Microservice into a Docker container, publish to Amazon ECR and then deploy the Container application into AWS ECS Fargate
+1. Open [CloudFormation console](https://console.aws.amazon.com/cloudformation/home) and click on “Create stack”, selecting “With new resources” option.
+2. In the next screen, under the “Specify template” section choose “Upload template file“, and provide the file you downloaded from the repo */templates/fargate-task.yml.*
+3. Click next, give a name to the stack like “fargate-task-dev”. Choose “dev” as value for the Environment parameter.
+4. Provide the image URL obtained in the previous step for the ImageUrl parameter and leave the rest of the parameters as default. 
+5. Click next and optionally define your tags. Click next again. On the last screen, don’t forget to tick the check box in the “Capabilities” section, and finally click on “Create stack” button.
 
-1. Create base application stack using AWS CloudFormation
-
-    * Open [CloudFormation console](https://console.aws.amazon.com/cloudformation/home) and click on “Create stack”, selecting “With new resources” option.
-    * In the next screen, under the “Specify template” section choose “Upload template file“, and provide the file you downloaded from the repo */templates/ecs-cluster.yml.*
-    * Click next, give the stack a name like “ECSCluster-dev“, and choose dev as value for the Environment parameter.Click next, optionally define your tags, and click next again. On the last screen, don’t forget to tick the check box in the “Capabilities” section, and finally click on “Create stack” button.
-
-1. Upload the Project Image to Amazon Elastic Container Repository
-
-    *   Open the Amazon Elastic Container repository created from previous step and choose "View push commands".
-    *   Follow the steps displayed to upload the project (these steps work only when you use AWS CLI version 1.7 or later).
-    *   When the upload completes, copy the URL of the image in the repository. Use this URL as a Input parameter to the cloud formation template described in the section section.
-
-
-
-1. Create Fargate Task, ECS Service and Load Balancer using AWS CloudFormation
-
-    * Open [CloudFormation console](https://console.aws.amazon.com/cloudformation/home) and click on “Create stack”, selecting “With new resources” option.
-    * In the next screen, under the “Specify template” section choose “Upload template file“, and provide the file you downloaded from the repo */templates/fargate-task.yml.*
-    * Click next, give a name to the stack like “fargate-task-dev”. Choose “dev” as value for the Environment parameter. Provide the image URL obtained in the previous step for the ImageUrl parameter and leave the rest of the parameters as default. Click next and optionally define your tags. Click next again. On the last screen, don’t forget to tick the check box in the “Capabilities” section, and finally click on “Create stack” button.
-
-### STEP 4 : Verify the deployed application, update the AppConfig Configuration data and deploy configuration to the application
+### STEP 5 : Verify the deployed application, update the AppConfig configuration data, and deploy the updated configuration
 
 1. Navigate to [AWS CloudFormation Console](https://console.aws.amazon.com/cloudformation/home) and open the fargate-task-dev stack you created
 2. Click on Outputs and copy the ExternalUrl for the Loadbalancer
-3. Verify the application by using the External URL for the Load Balancer. *http://<load balancer dns>/movies/getMovies*
+3. Verify the application by using the External URL for the Load Balancer. *http://ExternalUrl/movies/getMovies*
 4. Next, we will change the configuration value in the AWS AppConfig and see how it will be reflected in the container application.
 5. Open the [AWS AppConfig console](https://console.aws.amazon.com/systems-manager/appconfig) ,  click on your Application and go to Configuration Profiles tab and click on the Configuration Profile you created
 6. Click on Create under Hosted configuration versions, this will open a new screen where you can edit the Configuration data.
