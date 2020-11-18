@@ -6,7 +6,7 @@ This is a demo of the [AWS AppConfig](https://docs.aws.amazon.com/appconfig/late
 
 [AWS AppConfig](https://docs.aws.amazon.com/appconfig/latest/userguide/what-is-appconfig.html) helps AWS customers to quickly roll out application configurations across applications hosted on EC2 instances, containers, AWS Lambda, mobile apps, IoT devices, and on-premise servers in a validated, controlled and monitored way.
 
-This demo explains
+This sample code explains
 
 
 1. How to separate application configuration from application code for a containerized application.
@@ -26,7 +26,7 @@ This application has a Caching layer built in to cache the responses from AWS Ap
 2. In the left navigation pane, choose AWS AppConfig.
 3. If the AWS AppConfig welcome page appears, click Create configuration data. Otherwise, click Create application.
 4. For Name, enter a name for the application. (*MyContainerApplication*) You can add an optional description and apply tags to the application. Choose Create application.
-5. After the application is created, you are directed to a page with Environments and Configuration Profiles Choose Create environment, and then enter a name (MyContainerApplicationProductionEnvironment) and optional description for the environment. You can also optionally add tags and configure Amazon CloudWatch alarms for this environment.
+5. After the application is created, you are directed to a page with Environments and Configuration Profiles Choose Create environment, and then enter a name (*MyContainerApplicationProductionEnvironment*) and optional description for the environment. You can also optionally add tags and configure Amazon CloudWatch alarms for this environment.
 6. In the top navigation, choose the application name, and on the Configuration Profiles tab, choose Create configuration profile.
 7. Enter a name (*MyContainerApplicationConfigurationProfile*) and optional description for the configuration profile.
 8. Under Configuration source, choose AWS AppConfig hosted configuration.Under Content, choose JSON, paste the following content, and then choose Next.
