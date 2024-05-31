@@ -1,11 +1,11 @@
-package com.amazonaws.samples.appconfig;
+package com.amazonaws.samples.appconfig.utils;
 
 import com.amazonaws.samples.appconfig.cache.ConfigurationCache;
 import com.amazonaws.samples.appconfig.cache.ConfigurationCacheItem;
 import com.amazonaws.samples.appconfig.model.ConfigurationKey;
 import software.amazon.awssdk.services.appconfig.AppConfigClient;
 import software.amazon.awssdk.services.appconfig.model.GetConfigurationRequest;
-import software.amazon.awssdk.services.appconfig.model.GetConfigurationResponse;
+import software.amazon.awssdk.services.appconfig.model.*;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -58,6 +58,29 @@ public class AppConfigUtility {
             throw result.getException();
         }
         return result.getValue();
+    }
+
+    public GetConfigurationResponse updateConfiguration(final ConfigurationKey configurationKey, final String content) {
+        try {
+            UpdateConfigurationProfileRequest updateRequest = UpdateConfigurationProfileRequest.builder()
+                    .build();
+
+            UpdateConfigurationProfileResponse updateResponse = client.updateConfigurationProfile(updateRequest);
+            final ConfigurationCacheItem<GetConfigurationResponse> result = Optional.ofNullable(cache.get(configurationKey))
+                    .map(item -> {
+                        if (item.isRefreshNeeded()) {
+                            return getConfigurationFromApiAndApplyToCache(configurationKey, item, item.getValue().configurationVersion());
+                        } else {
+                            return item;
+                        }
+                    }).orElseGet(() -> getConfigurationFromApiAndApplyToCache(configurationKey, null, null));
+            if (result.getValue() == null && result.getException() != null) {
+                throw result.getException();
+            }
+            return result.getValue();
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating configuration: " + e.getMessage(), e);
+        }
     }
 
 

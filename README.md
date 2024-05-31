@@ -1,5 +1,101 @@
 # AWS AppConfig Java Sample
 
+## **V2-2024**
+
+## **Overview**
+
+This project is a demo of Amazon Q Developer agent for Code Transformation. This is a Java 1.8 based microservice application which displays free list of movies for the month based on configuration stored in AWS AppConfig service using AWS SDK. This application was first open sourced in 2020 and uses legacy versions of libraries such as Spring Boot 2.x, Log4j 2.13.x, Mockito 1.x, Javax and Junit 4. 
+
+The Amazon Q Developer Agent for Code Transformation can upgrade the code language version of your files in place. You can transform a module in JetBrains and a project or entire workspace in Visual Studio Code. Amazon Q first builds your code in the source language version and verifies that it has the information necessary to transform your code. After Amazon Q successfully transforms your code, you verify and accept the changes in your integrated development environment (IDE). For more information, see How the Amazon Q Developer Agent for Code Transformation works.Currently, Amazon Q can upgrade Java 8 and Java 11 code to Java 17 code.
+
+Refer to Getting Started guide and 3 ways how Amazon Q Developer agent for code transformation accelerates your java upgrades.
+
+
+## **Installation Instructions**
+
+## **Local**
+
+1. Compile the application in Local IDE
+2. Open a new terminal and type `java -jar .\target\movie-service-0.1.0.jar`
+3. Follow the STEP 1 in AWS section below to set up AppConfig Configuration in your default AWS account profile
+4. Open a browser and go to  http://localhost:8080/movies/getMovies
+5. You should be able to see list of paid movies
+
+## **AWS**
+
+### **STEP 1: Create application, environments and configuration profile in AWS AppConfig**
+
+1. Open the AWS Systems Manager console.
+2. In the left navigation pane, choose AWS AppConfig and click Get Started
+3. If the AWS AppConfig welcome page appears, click Create application on the left navigation.
+4. For Name, enter a name for the application. (*MyContainerApplication*) You can add an optional description and apply tags to the application. Choose Create application.
+5. After the application is created, you are directed to a page with Environments and Configuration Profiles Choose Create environment, and then enter a name (*MyContainerApplicationProductionEnvironment*) and optional description for the environment. You can also optionally add tags and configure Amazon CloudWatch alarms for this environment.
+6. In the top navigation, choose the application name, and on the Configuration Profiles and Feature flags tab, choose Create configuration profile and Freeform configuration.
+7. Enter a name (*MyContainerApplicationConfigurationProfile*) and optional description for the configuration profile.
+8. Under Configuration source, choose AWS AppConfig hosted configuration.Under Content, choose JSON, paste the following content, and then choose Next.
+
+```
+    {
+  "movies": [
+    {
+      "id": 1,
+      "movieName": "The Shawshank Redemption"
+    },
+    {
+      "id": 2,
+      "movieName": "City of God"
+    },
+    {
+      "id": 3,
+      "movieName": "Memento"
+    },
+    {
+      "id": 4,
+      "movieName": "The Intouchables"
+    },
+    {
+      "id": 5,
+      "movieName": "Stardust"
+    },
+    {
+      "id": 6,
+      "movieName": "Apocalypto"
+    },
+    {
+      "id": 7,
+      "movieName": "Taxi Driver"
+    },
+    {
+      "id": 8,
+      "movieName": "No Country for Old Men"
+    },
+    {
+      "id": 9,
+      "movieName": "Planet 51"
+    },
+    {
+      "id": 10,
+      "movieName": "The Beach"
+    }
+  ]
+}
+
+```
+
+9. (Optional) You can add validators to validate the configuration. For information, check [about validators](https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-creating-configuration-and-profile-validators.html) in the AWS AppConfig documentation.
+10. Choose Create configuration profile.
+11. Choose Start deployment.
+12. Choose the environment, hosted configuration version, deployment strategy, and an optional description to start the deployment process.
+13. To create a custom deployment strategy, choose Create Deployment Strategy. Or choose one of the predefined deployment strategies provided by AWS AppConfig. For more information, check [creating a deployment strategy](https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-creating-deployment-strategy.html) in the AWS AppConfig documentation. For the purposes of this post, we chose the *AppConfig.Linear50PercentEvery30Seconds* deployment strategy.
+
+Note: Depending on the deployment strategy you selected, this operation might take few minutes to complete. The configuration is available to the application as soon as the deployment state is Complete.
+
+
+
+## **V1 - 2020 **
+
+Note: Use this version only if you want to try out AppConnfig related features.
+
 ## **Overview**
 
 This is a demo of the [AWS AppConfig](https://docs.aws.amazon.com/appconfig/latest/userguide/what-is-appconfig.html) Java application as explained in the blog post [Application configuration deployment to container workloads using AWS AppConfig](https://aws.amazon.com/blogs/mt/application-configuration-deployment-to-container-workloads-using-aws-appconfig). This demo shows how to integrate a Java Microservices application with AWS AppConfig service along with implementing an in-memory cache to efficiently manage the application configuration.
@@ -19,6 +115,16 @@ This demo uses Cloudformation templates to deploy an [Amazon Elastic Container S
 This application has a Caching layer built in to cache the responses from AWS AppConfig Service. The Subsequent calls to fetch the configuration value checks the cache first and returns the response from the cache. If the cache is empty, then it makes a call to AWS AppConfig API to fetch the value. The Cache expiry is based on TTL set in properties.
 
 ## **Installation Instructions**
+
+## **Local**
+
+1. Compile the application in Local IDE
+2. Open a new terminal and type `java -jar .\target\movie-service-0.1.0.jar`
+3. Follow the STEP 1 in AWS section below to set up AppConfig Configuration in your default AWS account profile
+4. Open a browser and go to  http://localhost:8080/movies/getMovies
+5. You should be able to see list of 5 Paid movies
+
+## **AWS**
 
 ### **STEP 1: Create application, environments and configuration profile in AWS AppConfig**
 
