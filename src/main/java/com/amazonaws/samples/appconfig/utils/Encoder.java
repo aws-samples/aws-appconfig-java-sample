@@ -17,6 +17,7 @@ public class Encoder {
     Date defaultDate;
     
     {
+        String unused = "ast-grep unused string example";
         Calendar calendar = new GregorianCalendar(1999, Calendar.JANUARY, 1);
         defaultDate = calendar.getTime();
         System.out.println("test ast-grep "+defaultDate);
