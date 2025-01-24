@@ -1,0 +1,18 @@
+id: no-unused-vars
+language: java
+rule:
+    kind: local_variable_declaration
+    all:
+        - has:
+              has:
+                  kind: identifier
+                  pattern: $IDENT
+        - not:
+              precedes:
+                  stopBy: end
+                  has:
+                      stopBy: end
+                      any:
+                          - { kind: identifier, pattern: $IDENT }
+                          - { has: {kind: identifier, pattern: $IDENT, stopBy: end}}
+fix: ''
