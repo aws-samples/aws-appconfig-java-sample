@@ -1,0 +1,12 @@
+name: orchestrator_qct_cli
+description: My collection of custom transformations to run before and after a transformation.
+
+pre_qct_actions:
+  ast-grep:
+    rules:
+      - custom-transformation-pre-qct.yaml
+
+post_qct_actions:
+  ast-grep:
+    rules:
+      - custom-transformation-post-qct.yaml
