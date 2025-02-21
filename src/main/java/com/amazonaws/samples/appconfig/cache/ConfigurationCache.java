@@ -5,6 +5,7 @@ import software.amazon.awssdk.services.appconfig.model.GetConfigurationResponse;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConfigurationCache {
