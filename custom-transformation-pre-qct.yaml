@@ -1,4 +1,4 @@
-id: sysout-to-logger
+id: no-unused-vars
 language: java
 rule:
     kind: local_variable_declaration
@@ -15,4 +15,24 @@ rule:
                       any:
                           - { kind: identifier, pattern: $IDENT }
                           - { has: {kind: identifier, pattern: $IDENT, stopBy: end}}
+fix: ''
+
+--- # this is YAML doc separator to have multiple rules in one file
+
+id: no-unused-imports
+rule:
+    kind: import_declaration
+    all:
+        - has:
+            has:
+                kind: identifier
+                pattern: $IDENT
+        - not:
+            precedes:
+                stopBy: end
+                has:
+                    stopBy: end
+                    any:
+                        - { kind: type_identifier, pattern: $IDENT }
+                        - { has: {kind: type_identifier, pattern: $IDENT, stopBy: end}}
 fix: ''
