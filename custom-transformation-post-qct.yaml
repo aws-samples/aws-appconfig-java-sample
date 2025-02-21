@@ -1,4 +1,4 @@
-id: no-unused-vars
+id: sysout-to-logger
 language: java
 rule:
     pattern: System.out.println($MATCH)
