@@ -3,8 +3,8 @@ package com.amazonaws.samples.appconfig.movies;
 import com.amazonaws.samples.appconfig.utils.AppConfigUtility;
 import com.amazonaws.samples.appconfig.cache.ConfigurationCache;
 import com.amazonaws.samples.appconfig.model.ConfigurationKey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
@@ -14,9 +14,10 @@ import software.amazon.awssdk.services.appconfig.model.GetConfigurationResponse;
 import java.time.Duration;
 import java.util.UUID;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MoviesControllerTest {
 
@@ -31,7 +32,7 @@ public class MoviesControllerTest {
 
     private MoviesController moviesController;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         moviesController = new MoviesController();
@@ -51,7 +52,7 @@ public class MoviesControllerTest {
         GetConfigurationResponse getConfigurationResponse = GetConfigurationResponse.builder().build();
 
         AppConfigUtility appConfigUtility = mock(AppConfigUtility.class);
-        when(appConfigUtility.getConfiguration(any(ConfigurationKey.class))).thenReturn(getConfigurationResponse);
+        when(appConfigUtility.getConfiguration(nullable(ConfigurationKey.class))).thenReturn(getConfigurationResponse);
 
         moviesController.cacheItemTtl = Duration.ofSeconds(60);
         moviesController.client = appConfigClient;

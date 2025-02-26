@@ -1,0 +1,33 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< org.springframework:movie-service >------------------
+[INFO] Building movie-service 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ movie-service ---
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ movie-service ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ movie-service ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 11 source files with javac [debug deprecation parameters release 17] to target/classes
+[WARNING] /ramdisk/code/src/main/java/com/amazonaws/samples/appconfig/utils/AppConfigUtility.java:[92,59] getConfiguration(software.amazon.awssdk.services.appconfig.model.GetConfigurationRequest) in software.amazon.awssdk.services.appconfig.AppConfigClient has been deprecated
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ movie-service ---
+[INFO] skip non existing resourceDirectory /ramdisk/code/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ movie-service ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug deprecation parameters release 17] to target/test-classes
+[WARNING] /ramdisk/code/src/test/java/com/amazonaws/samples/appconfig/movies/MoviesControllerTest.java:[37,27] initMocks(java.lang.Object) in org.mockito.MockitoAnnotations has been deprecated
+[INFO] /ramdisk/code/src/test/java/com/amazonaws/samples/appconfig/movies/MockTest.java: /ramdisk/code/src/test/java/com/amazonaws/samples/appconfig/movies/MockTest.java uses unchecked or unsafe operations.
+[INFO] /ramdisk/code/src/test/java/com/amazonaws/samples/appconfig/movies/MockTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.084 s
+[INFO] Finished at: 2025-02-26T07:42:00Z
+[INFO] ------------------------------------------------------------------------
