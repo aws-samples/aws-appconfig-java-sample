@@ -23,7 +23,7 @@ import software.amazon.awssdk.services.appconfig.AppConfigClient;
 import software.amazon.awssdk.services.appconfig.model.GetConfigurationResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
