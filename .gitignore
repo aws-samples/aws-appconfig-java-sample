@@ -5,9 +5,11 @@
 .classpath
 .project
 .settings/
+/movie-service-utils/jars/
 
 # Packaged files #
-*.jar
+#*.jar
 *.war
 *.ear
 *.iml
+

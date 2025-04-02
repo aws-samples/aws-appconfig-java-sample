@@ -1,18 +1,35 @@
-id: no-unused-vars
+id: sysout-to-logger
 language: java
 rule:
-    kind: local_variable_declaration
-    all:
-        - has:
-              has:
-                  kind: identifier
-                  pattern: $IDENT
-        - not:
-              precedes:
-                  stopBy: end
-                  has:
-                      stopBy: end
-                      any:
-                          - { kind: identifier, pattern: $IDENT }
-                          - { has: {kind: identifier, pattern: $IDENT, stopBy: end}}
-fix: ''
+    pattern: System.out.println($MATCH)
+fix: logger.info($MATCH)
+
+--- # this is YAML doc separator to have multiple rules in one file
+
+id: update-movie-service-util-java17
+language: html
+rule:
+    pattern: |-
+        <dependency>
+            <groupId>org.amazonaws.samples</groupId>
+            <artifactId>movie-service-utils</artifactId>
+            <version>$VERSION</version>
+        </dependency>
+constraints:
+    VERSION:
+        regex: "^0\\.1\\.0"
+fix: |-
+    <dependency>
+        <groupId>org.amazonaws.samples</groupId>
+        <artifactId>movie-service-utils</artifactId>
+        <version>0.2.0</version>
+    </dependency>
+
+--- # this is YAML doc separator to have multiple rules in one file
+id: update-movie-service-util-method
+language: java
+rule:
+    pattern: |-
+        MovieUtils.isValidMovieName($MOVIE_NAME)
+fix: |-
+    MovieUtils.isValidMovie($MOVIE_NAME, movieId)
