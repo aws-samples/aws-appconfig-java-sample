@@ -13,13 +13,26 @@ Refer to Getting Started guide and 3 ways how Amazon Q Developer agent for code 
 
 ## **Installation Instructions**
 
+## Dependencies Setup
+
+Before building the application, you need to install the movie-service-utils dependency in your local Maven repository. This utility library is available in two versions to support different Java versions:
+
+### For Java 1.8 Version
+```bash
+mvn install:install-file \
+  -Dfile=./built-library/0_1_0/movie-service-utils-1.0-SNAPSHOT.jar \
+  -DgroupId=com.amazon.sample \
+  -DartifactId=movie-service-utils \
+  -Dversion=1.0-SNAPSHOT \
+  -Dpackaging=jar
+```
+
 ## **Local**
 
 1. Compile the application in Local IDE
-2. Open a new terminal and type `java -jar .\target\movie-service-0.1.0.jar`
-3. Follow the STEP 1 in AWS section below to set up AppConfig Configuration in your default AWS account profile
-4. Open a browser and go to  http://localhost:8080/movies/getMovies
-5. You should be able to see list of paid movies
+2. Follow the STEP 1 in AWS section below to set up AppConfig Configuration in your default AWS account profile
+3. Open a browser and go to  http://localhost:8080/movies/getMovies
+4. You should be able to see list of paid movies
 
 ## **AWS**
 
@@ -116,13 +129,22 @@ This application has a Caching layer built in to cache the responses from AWS Ap
 
 ## **Installation Instructions**
 
+### For Java 1.8 Version
+```bash
+mvn install:install-file \
+  -Dfile=./built-library/0_1_0/movie-service-utils-1.0-SNAPSHOT.jar \
+  -DgroupId=com.amazon.sample \
+  -DartifactId=movie-service-utils \
+  -Dversion=1.0-SNAPSHOT \
+  -Dpackaging=jar
+```
+
 ## **Local**
 
 1. Compile the application in Local IDE
-2. Open a new terminal and type `java -jar .\target\movie-service-0.1.0.jar`
-3. Follow the STEP 1 in AWS section below to set up AppConfig Configuration in your default AWS account profile
-4. Open a browser and go to  http://localhost:8080/movies/getMovies
-5. You should be able to see list of 5 Paid movies
+2. Follow the STEP 1 in AWS section below to set up AppConfig Configuration in your default AWS account profile
+3. Open a browser and go to  http://localhost:8080/movies/getMovies
+4. You should be able to see list of paid movies
 
 ## **AWS**
 

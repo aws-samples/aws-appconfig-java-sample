@@ -1,5 +1,7 @@
 package com.amazonaws.samples.appconfig.movies;
 
+import com.amazonaws.samples.appconfig.utils.MovieUtils;
+
 import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
@@ -109,6 +111,10 @@ public class MoviesController {
 
     @RequestMapping(value = "/movies/{movie}/edit", method = POST)
     public String processUpdateMovie(@Valid Movie movie, BindingResult result, @PathVariable("movieId") int movieId) {
+        if (!MovieUtils.isValidMovieName(movie.getMovieName())) {
+            result.rejectValue("name", "error.name", "Invalid movie name");
+            return "editMovieForm";
+        }
         final AppConfigUtility appConfigUtility = new AppConfigUtility(getOrDefault(this::getClient, this::getDefaultClient),
                 getOrDefault(this::getConfigurationCache, ConfigurationCache::new),
                 getOrDefault(this::getCacheItemTtl, () -> cacheItemTtl),
