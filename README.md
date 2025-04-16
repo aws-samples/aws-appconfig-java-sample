@@ -20,10 +20,10 @@ Before building the application, you need to install the movie-service-utils dep
 ### For Java 1.8 Version
 ```bash
 mvn install:install-file \
-  -Dfile=./built-library/0_1_0/movie-service-utils-1.0-SNAPSHOT.jar \
-  -DgroupId=com.amazon.sample \
+  -Dfile=./movie-service-utils/built-library/0_1_0/movie-service-utils-0.1.0.jar \
+  -DgroupId=com.amazonaws.sample \
   -DartifactId=movie-service-utils \
-  -Dversion=1.0-SNAPSHOT \
+  -Dversion=0.1.0 \
   -Dpackaging=jar
 ```
 
@@ -132,10 +132,10 @@ This application has a Caching layer built in to cache the responses from AWS Ap
 ### For Java 1.8 Version
 ```bash
 mvn install:install-file \
-  -Dfile=./built-library/0_1_0/movie-service-utils-1.0-SNAPSHOT.jar \
-  -DgroupId=com.amazon.sample \
+  -Dfile=./movie-service-utils/built-library/0_1_0/movie-service-utils-0.1.0.jar \
+  -DgroupId=com.amazonaws.sample \
   -DartifactId=movie-service-utils \
-  -Dversion=1.0-SNAPSHOT \
+  -Dversion=0.1.0 \
   -Dpackaging=jar
 ```
 
