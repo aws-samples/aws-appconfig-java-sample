@@ -1,0 +1,18 @@
+name: dependency-upgrade
+description: "Custom dependency version management for Java migration from JDK 8/11/17 to JDK 17/21"
+
+dependencyManagement:
+  dependencies:
+    - identifier: "software.amazon.awssdk:appconfig" # Required
+      targetVersion: "2.31.40" # Required
+      originType: "THIRD_PARTY" # Required
+    - identifier: "software.amazon.awssdk:bom" # Required
+      targetVersion: "2.31.40" # Required
+      originType: "THIRD_PARTY" # Required
+    - identifier: "org.springframework.boot:spring-boot-starter-parent" # Required
+      targetVersion: "3.4.5" # Required
+      originType: "THIRD_PARTY" # Required
+  plugins:
+    - identifier: "org.springframework.boot:spring-boot-maven-plugin"
+      targetVersion: "3.4.5"
+      originType: "THIRD_PARTY"

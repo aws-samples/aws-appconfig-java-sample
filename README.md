@@ -133,7 +133,7 @@ This application has a Caching layer built in to cache the responses from AWS Ap
 ```bash
 mvn install:install-file \
   -Dfile=./movie-service-utils/built-library/0_1_0/movie-service-utils-0.1.0.jar \
-  -DgroupId=com.amazonaws.sample \
+  -DgroupId=com.amazonaws.samples \
   -DartifactId=movie-service-utils \
   -Dversion=0.1.0 \
   -Dpackaging=jar
