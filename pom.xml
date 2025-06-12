@@ -26,7 +26,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.amazonaws.sample</groupId>
+            <groupId>com.amazonaws.samples</groupId>
             <artifactId>movie-service-utils</artifactId>
             <version>0.1.0</version>
         </dependency>
