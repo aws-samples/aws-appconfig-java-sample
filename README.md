@@ -30,6 +30,26 @@ mvn install:install-file \
   -Dpackaging=jar
 ```
 
+### For Java 17 Version
+```bash
+mvn install:install-file \
+  -Dfile=./movie-service-utils/built-library/0_2_0/movie-service-utils-0.2.0.jar \
+  -DgroupId=com.amazonaws.samples \
+  -DartifactId=movie-service-utils \
+  -Dversion=0.2.0 \
+  -Dpackaging=jar
+```
+
+### For Java 21 Version
+```bash
+mvn install:install-file \
+  -Dfile=./movie-service-utils/built-library/0_3_0/movie-service-utils-0.3.0.jar \
+  -DgroupId=com.amazonaws.samples \
+  -DartifactId=movie-service-utils \
+  -Dversion=0.3.0 \
+  -Dpackaging=jar
+```
+
 ## **Local**
 
 1. Compile the application in Local IDE
@@ -139,6 +159,26 @@ mvn install:install-file \
   -DgroupId=com.amazonaws.samples \
   -DartifactId=movie-service-utils \
   -Dversion=0.1.0 \
+  -Dpackaging=jar
+```
+
+### For Java 17 Version
+```bash
+mvn install:install-file \
+  -Dfile=./movie-service-utils/built-library/0_2_0/movie-service-utils-0.2.0.jar \
+  -DgroupId=com.amazonaws.samples \
+  -DartifactId=movie-service-utils \
+  -Dversion=0.2.0 \
+  -Dpackaging=jar
+```
+
+### For Java 21 Version
+```bash
+mvn install:install-file \
+  -Dfile=./movie-service-utils/built-library/0_3_0/movie-service-utils-0.3.0.jar \
+  -DgroupId=com.amazonaws.samples \
+  -DartifactId=movie-service-utils \
+  -Dversion=0.3.0 \
   -Dpackaging=jar
 ```
 
