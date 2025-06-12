@@ -6,9 +6,12 @@
 
 This project is a demo of Amazon Q Developer agent for Code Transformation. This is a Java 1.8 based microservice application which displays free list of movies for the month based on configuration stored in AWS AppConfig service using AWS SDK. This application was first open sourced in 2020 and uses legacy versions of libraries such as Spring Boot 2.x, Log4j 2.13.x, Mockito 1.x, Javax and Junit 4. 
 
-The Amazon Q Developer Agent for Code Transformation can upgrade the code language version of your files in place. You can transform a module in JetBrains and a project or entire workspace in Visual Studio Code. Amazon Q first builds your code in the source language version and verifies that it has the information necessary to transform your code. After Amazon Q successfully transforms your code, you verify and accept the changes in your integrated development environment (IDE). For more information, see How the Amazon Q Developer Agent for Code Transformation works.Currently, Amazon Q can upgrade Java 8 and Java 11 code to Java 17 code.
+The Amazon Q Developer Agent for Code Transformation can upgrade the JDK version along with dependencies and associated code changes. You can JetBrains/Visual Studio Code or Command line interface for upgrades. Amazon Q first builds your code in the source language version and verifies that it has the information necessary to transform your code. After Amazon Q successfully transforms your code, you verify and accept the changes in your integrated development environment (IDE)/CLI. Currently, Amazon Q can upgrade Java 8 and Java 11 code to Java 17/21 code.
 
-Refer to Getting Started guide and 3 ways how Amazon Q Developer agent for code transformation accelerates your java upgrades.
+Refer to following blog posts for additional information
+1. https://aws.amazon.com/blogs/devops/three-ways-amazon-q-developer-agent-for-code-transformation-accelerates-java-upgrades/
+2. https://aws.amazon.com/blogs/devops/using-amazon-q-developer-cli-for-custom-java-application-transformations/
+3. https://aws.amazon.com/blogs/devops/amazon-q-developer-java-upgrades-a-deep-dive-into-new-selective-transformation-feature
 
 
 ## **Installation Instructions**
