@@ -13,6 +13,58 @@ Refer to following blog posts for additional information
 2. https://aws.amazon.com/blogs/devops/using-amazon-q-developer-cli-for-custom-java-application-transformations/
 3. https://aws.amazon.com/blogs/devops/amazon-q-developer-java-upgrades-a-deep-dive-into-new-selective-transformation-feature
 
+## **CI/CD Pipeline Configuration**
+
+**In preparation for Amazon Q Developer code transformation**, this project includes pre-configured CI/CD pipelines that automatically adapt to both Java 8 (pre-transformation) and Java 17 (post-transformation) code. These pipelines ensure your build process works seamlessly before, during, and after the Q Developer transformation process:
+
+### **GitHub Actions Workflow**
+
+The `.github/workflows/q-code-transformation.yml` file provides:
+- **Dynamic Java version detection** based on commit messages
+- **Automatic dependency installation** for the movie-service-utils library
+- **Build verification** and dependency artifact generation
+- **Q Developer integration** for code transformation workflows
+
+**Usage:**
+1. Push code to branches matching `Q-TRANSFORM-issue-*` pattern
+2. The workflow automatically detects Java version and uses appropriate runtime
+3. Artifacts are generated for Q Developer transformation process
+
+### **GitLab CI Configuration**
+
+The `.gitlab-ci.yml` file provides:
+- **Intelligent Java version detection** by scanning `pom.xml` content
+- **Dynamic Maven image selection** (Java 8 or Java 17)
+- **Complete build pipeline** with compile, test, and package stages
+- **Docker containerization** with Kaniko
+- **Q Developer transformation support** with required artifacts
+
+**Pipeline Stages:**
+1. **detect-java-version**: Scans pom.xml and sets appropriate Maven image
+2. **install-dependency**: Installs first-party movie-service-utils JAR
+3. **build**: Compiles the application using detected Java version
+4. **test**: Runs unit tests with JUnit reporting
+5. **package**: Creates Docker image with version-appropriate base image
+6. **q-code-transformation**: Generates dependencies for Q Developer (pre-transformation only)
+
+**Key Features:**
+- **Pre-transformation**: Uses Java 8 with Maven 3.8 for legacy code
+- **Post-transformation**: Automatically switches to Java 17 with compatible Maven version
+- **Artifact optimization**: Prevents upload size errors while maintaining functionality
+- **Q Developer compatibility**: Provides required job structure and artifacts
+
+**Branch Patterns:**
+- Regular branches: Run standard build, test, and package pipeline
+- `q/transform-*` branches: Include Q Developer transformation job for pre-transformation builds
+
+### **Getting Started with CI/CD**
+
+1. **For GitHub**: Push to a branch matching `Q-TRANSFORM-issue-*`
+2. **For GitLab**: Push to any branch (regular pipeline) or `q/transform-*` (with Q transformation)
+3. **Monitor builds**: Check pipeline status in respective CI/CD interface
+4. **Artifacts**: Download generated dependencies or Docker images as needed
+
+Both pipelines are designed to work seamlessly with Amazon Q Developer's code transformation process while providing robust build and deployment capabilities.
 
 ## **Installation Instructions**
 
