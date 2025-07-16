@@ -1,0 +1,70 @@
+name: Q Code Transformation
+
+on:
+  push:
+    branches:
+      - 'Q-TRANSFORM-issue-*'
+
+env:
+   MAVEN_CLI_OPTS: >-
+     -Djava.version=${{ contains(github.event.head_commit.message, 'Code transformation completed') && '17' || '1.8' }}
+     -Dmaven.compiler.source=${{ contains(github.event.head_commit.message, 'Code transformation completed') && '17' || '1.8' }}
+     -Dmaven.compiler.target=${{ contains(github.event.head_commit.message, 'Code transformation completed') && '17' || '1.8' }}
+
+jobs:
+  q-code-transformation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: ${{ contains(github.event.head_commit.message, 'Code transformation completed') && '17' || '8' }}
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Install movie-service-utils dependency
+        run: |
+          echo "Installing both versions of movie-service-utils JAR to local Maven repository..."
+          # Install Java 8 version
+          mvn install:install-file \
+            -Dfile=./movie-service-utils/built-library/0_1_0/movie-service-utils-0.1.0.jar \
+            -DgroupId=com.amazonaws.samples \
+            -DartifactId=movie-service-utils \
+            -Dversion=0.1.0 \
+            -Dpackaging=jar
+          
+          # # Install Java 17 version
+          # mvn install:install-file \
+          #   -Dfile=./movie-service-utils/built-library/0_2_0/movie-service-utils-0.2.0.jar \
+          #   -DgroupId=com.amazonaws.samples \
+          #   -DartifactId=movie-service-utils \
+          #   -Dversion=0.2.0 \
+          #   -Dpackaging=jar
+
+      - name: Build and copy dependencies
+        run: |
+          mvn ${{ env.MAVEN_CLI_OPTS }} verify
+          mvn ${{ env.MAVEN_CLI_OPTS }} dependency:copy-dependencies -DoutputDirectory=dependencies -Dmdep.useRepositoryLayout=true -Dmdep.copyPom=true -Dmdep.addParentPoms=true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: q-code-transformation-dependencies
+          path: dependencies
+
+      - name: Debug information
+        if: failure()
+        run: |
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit message: ${{ github.event.head_commit.message }}"
+          echo "Java version logic result: ${{ contains(github.event.head_commit.message, 'Code transformation completed') && '17' || '8' }}"
+          echo "Local Maven repository contents:"
+          find ~/.m2/repository/com/amazonaws/samples -name "*.jar" 2>/dev/null || echo "No movie-service-utils found in local repo"
+          java -version
+          mvn -version

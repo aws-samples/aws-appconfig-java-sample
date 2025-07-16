@@ -1,0 +1,171 @@
+variables:
+  DOCKER_REGISTRY: "registry.gitlab.com"
+  DOCKER_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}"
+  MAVEN_OPTS: >-
+    -Dhttps.protocols=TLSv1.2
+    -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+    -Dorg.slf4j.simpleLogger.showDateTime=true
+    -Djava.awt.headless=true
+    -Dmaven.install.skip=true
+
+  MAVEN_CLI_OPTS: >-
+    --batch-mode
+    --errors
+    --fail-at-end
+    --show-version
+    --no-transfer-progress
+    -DinstallAtEnd=true
+    -DdeployAtEnd=true
+
+  BUILD_IMAGE: maven:3.8-openjdk-8
+
+stages:
+  - .pre
+  - build
+  - test
+  - package
+
+# Detect Java version from pom.xml
+detect-java-version:
+  image: alpine:latest
+  stage: .pre
+  script:
+    - apk add --no-cache grep
+    - |
+      if grep -q "<java.version>17</java.version>\|<maven.compiler.source>17</maven.compiler.source>\|<maven.compiler.target>17</maven.compiler.target>" pom.xml; then
+        echo "BUILD_IMAGE=maven:3.8-openjdk-17" > build.env
+        echo "Detected Java 17 in pom.xml - Post-transformation"
+      else
+        echo "BUILD_IMAGE=maven:3.8-openjdk-8" > build.env
+        echo "Detected Java 8 in pom.xml - Pre-transformation"
+      fi
+    - cat build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+    expire_in: 1 hour
+
+# Install dependency in .pre stage
+install-dependency:
+  image: $BUILD_IMAGE
+  stage: .pre
+  needs:
+    - detect-java-version
+  script:
+    - mvn install:install-file 
+      -Dfile=./movie-service-utils/built-library/0_1_0/movie-service-utils-0.1.0.jar 
+      -DgroupId=com.amazonaws.samples 
+      -DartifactId=movie-service-utils 
+      -Dversion=0.1.0 
+      -Dpackaging=jar
+  cache:
+    paths:
+      - .m2/repository/
+    key: ${CI_COMMIT_REF_SLUG}
+  artifacts:
+    paths:
+      - .m2/repository/org/amazonaws/samples/
+    expire_in: 1 week
+
+# Build stage
+build:
+  image: $BUILD_IMAGE
+  stage: build
+  needs:
+    - detect-java-version
+    - install-dependency
+  script:
+    - echo "Building the application..."
+    - mvn $MAVEN_CLI_OPTS clean compile
+  cache:
+    paths:
+      - .m2/repository/
+    key: ${CI_COMMIT_REF_SLUG}
+  artifacts:
+    paths:
+      - target/
+    expire_in: 1 week
+
+# Test stage
+test:
+  image: $BUILD_IMAGE
+  stage: test
+  needs:
+    - detect-java-version
+    - build
+  script:
+    - echo "Running tests..."
+    - mvn $MAVEN_CLI_OPTS test
+  cache:
+    paths:
+      - .m2/repository/
+    key: ${CI_COMMIT_REF_SLUG}
+  artifacts:
+    reports:
+      junit: target/surefire-reports/*.xml
+    expire_in: 1 week
+
+# Package stage with Kaniko
+package:
+  stage: package
+  needs:
+    - detect-java-version
+    - test
+    - install-dependency
+    - build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$DOCKER_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - |
+      if grep -q "<java.version>17</java.version>\|<maven.compiler.source>17</maven.compiler.source>\|<maven.compiler.target>17</maven.compiler.target>" pom.xml; then
+        echo "Detected Java 17 in pom.xml - Generating Dockerfile for Java 17"
+        sed 's/maven:3.6.1-amazoncorretto-8/maven:3.8-openjdk-17/g' Dockerfile > Dockerfile.dynamic
+      else
+        echo "Detected Java 8 in pom.xml - Using original Dockerfile for Java 8"
+        cp Dockerfile Dockerfile.dynamic
+      fi
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile.dynamic"
+      --destination "${DOCKER_IMAGE_NAME}"
+  dependencies:
+    - install-dependency
+    - build
+  cache:
+    paths:
+      - .m2/repository/
+    key: ${CI_COMMIT_REF_SLUG}
+
+# Q Code Transformation job - Required by Q Developer (only for pre-transformation)
+q-code-transformation:
+  image: $BUILD_IMAGE
+  stage: build
+  needs:
+    - detect-java-version
+    - install-dependency
+  script:
+    - |
+      if grep -q "<java.version>17</java.version>\|<maven.compiler.source>17</maven.compiler.source>\|<maven.compiler.target>17</maven.compiler.target>" pom.xml; then
+        echo "Post-transformation detected - skipping dependency copy"
+        mvn $MAVEN_CLI_OPTS verify
+      else
+        echo "Pre-transformation detected - running full Q transformation"
+        mvn $MAVEN_CLI_OPTS verify
+        mvn $MAVEN_CLI_OPTS dependency:copy-dependencies -DoutputDirectory=dependencies -Dmdep.useRepositoryLayout=true -Dmdep.copyPom=true -Dmdep.addParentPoms=true
+      fi
+  cache:
+    paths:
+      - .m2/repository/
+    key: ${CI_COMMIT_REF_SLUG}
+  artifacts:
+    name: q-code-transformation-dependencies
+    paths:
+      - dependencies/*
+    when: on_success
+  rules:
+    - if: $CI_COMMIT_REF_NAME =~ /^q\/transform-/ && $CI_PIPELINE_SOURCE == 'push' && $BUILD_IMAGE !~ /openjdk-17/
+      when: always
+    - when: never
