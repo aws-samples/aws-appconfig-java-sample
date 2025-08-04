@@ -6,9 +6,6 @@ import software.amazon.awssdk.services.appconfig.model.ResourceNotFoundException
 import java.time.Clock;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class ConfigurationCacheItem<T> {
     private final Duration ttl;
