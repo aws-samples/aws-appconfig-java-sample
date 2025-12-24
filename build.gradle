@@ -1,38 +1,58 @@
-buildscript {
-    repositories {
-      maven {
-        url "https://plugins.gradle.org/m2/"
-      }
-      mavenCentral()
-    }
-    dependencies {
-        classpath('org.springframework.boot:spring-boot-gradle-plugin:2.3.0.RELEASE')
-    }
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+    id 'eclipse'
+    id 'idea'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
+group = 'org.amazonaws.samples'
+version = '0.1.0'
 
-group = 'springio'
-
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
+dependencyManagement {
+    imports {
+        mavenBom 'software.amazon.awssdk:bom:2.14.27'
+    }
+}
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web") 
-    testCompile("org.springframework.boot:spring-boot-starter-test")
-    implementation platform('software.amazon.awssdk:bom:2.14.27')
+    // Local module dependency
+    implementation project(':movie-service-utils')
+    
+    // Spring Boot dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    // AWS SDK
     implementation 'software.amazon.awssdk:appconfig'
-    compile("org.json:json:20200518")
-    testImplementation group: 'junit', name: 'junit', version: '4.11'
+    
+    // JSON processing
+    implementation 'org.json:json:20200518'
+    
+    // Logging
+    implementation 'org.apache.logging.log4j:log4j-api:2.13.3'
+    implementation 'org.apache.logging.log4j:log4j-core:2.13.3'
+    
+    // Validation
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    
+    // Test dependencies
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.mockito:mockito-all:1.10.19'
+}
+
+// Task to copy dependencies for Q Code Transformation
+task copyDependencies(type: Copy) {
+    from configurations.runtimeClasspath
+    into 'dependencies'
 }
 

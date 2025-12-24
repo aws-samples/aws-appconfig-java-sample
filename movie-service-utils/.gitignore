@@ -1,0 +1,81 @@
+# Build artifacts
+build/
+target/
+out/
+bin/
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Java compiled classes
+*.class
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+.apt_generated/
+.apt_generated_tests/
+
+# Eclipse
+.metadata/
+.recommenders/
+
+# IntelliJ
+*.iws
+*.iml
+*.ipr
+out/
+
+# NetBeans
+nbproject/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Gradle daemon
+.gradle/
+
+# Gradle cache
+.gradle/caches/
+.gradle/wrapper/dists/
+.gradle/notifications/
+.gradle/buildOutputCleanup/
+
+# Maven (in case someone uses both)
+.mvn/
+.m2/
+
+# Dependencies folder (if created by custom tasks)
+dependencies/

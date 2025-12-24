@@ -1,0 +1,3 @@
+rootProject.name = 'aws-appconfig-java-sample'
+
+include 'movie-service-utils'

@@ -7,12 +7,8 @@ public class MovieUtils {
      * @param movieName The name of the movie to validate
      * @return true if the movie name is valid, false otherwise
      */
-    public static boolean isValidMovie(String movieName, int movieId) {
+    public static boolean isValidMovieName(String movieName) {
         if (movieName == null || movieName.trim().isEmpty()) {
-            return false;
-        }
-
-        if(movieId <= 0){
             return false;
         }
         // Movie name should be between 1 and 200 characters

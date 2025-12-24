@@ -1,0 +1,26 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'com.amazonaws.samples'
+version = '0.1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Add any dependencies needed for the utils module
+    // Currently no external dependencies required
+}
+
+// Task to build JAR for local installation
+jar {
+    baseName = 'movie-service-utils'
+    version = '0.1.0'
+}

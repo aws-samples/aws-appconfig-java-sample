@@ -4,9 +4,9 @@
 
 ## **Overview**
 
-This project is a demo of Amazon Q Developer agent for Code Transformation. This is a Java 1.8 based microservice application which displays free list of movies for the month based on configuration stored in AWS AppConfig service using AWS SDK. This application was first open sourced in 2020 and uses legacy versions of libraries such as Spring Boot 2.x, Log4j 2.13.x, Mockito 1.x, Javax and Junit 4. 
+This project is a demo of AWS Transform custom transformations. This is a Java 1.8 based microservice application which displays free list of movies for the month based on configuration stored in AWS AppConfig service using AWS SDK. This application was first open sourced in 2020 and uses legacy versions of libraries such as Spring Boot 2.x, Log4j 2.13.x, Mockito 1.x, Javax and Junit 4. 
 
-The Amazon Q Developer Agent for Code Transformation can upgrade the JDK version along with dependencies and associated code changes. You can JetBrains/Visual Studio Code or Command line interface for upgrades. Amazon Q first builds your code in the source language version and verifies that it has the information necessary to transform your code. After Amazon Q successfully transforms your code, you verify and accept the changes in your integrated development environment (IDE)/CLI. Currently, Amazon Q can upgrade Java 8 and Java 11 code to Java 17/21 code.
+AWS Transform custom can upgrade the JDK version along with dependencies and associated code changes. You can use JetBrains/Visual Studio Code or Command line interface for upgrades. AWS Transform first builds your code in the source language version and verifies that it has the information necessary to transform your code. After AWS Transform successfully transforms your code, you verify and accept the changes in your integrated development environment (IDE)/CLI. Currently, AWS Transform can upgrade Java 8 and Java 11 code to Java 17/21 code.
 
 Refer to following blog posts for additional information
 1. https://aws.amazon.com/blogs/devops/three-ways-amazon-q-developer-agent-for-code-transformation-accelerates-java-upgrades/
@@ -15,7 +15,7 @@ Refer to following blog posts for additional information
 
 ## **CI/CD Pipeline Configuration**
 
-**In preparation for Amazon Q Developer code transformation**, this project includes pre-configured CI/CD pipelines that automatically adapt to both Java 8 (pre-transformation) and Java 17 (post-transformation) code. These pipelines ensure your build process works seamlessly before, during, and after the Q Developer transformation process:
+**In preparation for AWS Transform custom transformations**, this project includes pre-configured CI/CD pipelines that automatically adapt to both Java 8 (pre-transformation) and Java 17 (post-transformation) code. These pipelines ensure your build process works seamlessly before, during, and after the AWS Transform transformation process:
 
 ### **GitHub Actions Workflow**
 
@@ -23,39 +23,39 @@ The `.github/workflows/q-code-transformation.yml` file provides:
 - **Dynamic Java version detection** based on commit messages
 - **Automatic dependency installation** for the movie-service-utils library
 - **Build verification** and dependency artifact generation
-- **Q Developer integration** for code transformation workflows
+- **AWS Transform integration** for code transformation workflows
 
 **Usage:**
 1. Push code to branches matching `Q-TRANSFORM-issue-*` pattern
 2. The workflow automatically detects Java version and uses appropriate runtime
-3. Artifacts are generated for Q Developer transformation process
+3. Artifacts are generated for AWS Transform transformation process
 
 ### **GitLab CI Configuration**
 
 The `.gitlab-ci.yml` file provides:
-- **Intelligent Java version detection** by scanning `pom.xml` content
-- **Dynamic Maven image selection** (Java 8 or Java 17)
+- **Intelligent Java version detection** by scanning `build.gradle` content
+- **Dynamic Gradle image selection** (Java 8 or Java 17)
 - **Complete build pipeline** with compile, test, and package stages
 - **Docker containerization** with Kaniko
-- **Q Developer transformation support** with required artifacts
+- **AWS Transform transformation support** with required artifacts
 
 **Pipeline Stages:**
-1. **detect-java-version**: Scans pom.xml and sets appropriate Maven image
-2. **install-dependency**: Installs first-party movie-service-utils JAR
+1. **detect-java-version**: Scans build.gradle and sets appropriate Gradle image
+2. **build-utils**: Builds the movie-service-utils module
 3. **build**: Compiles the application using detected Java version
 4. **test**: Runs unit tests with JUnit reporting
 5. **package**: Creates Docker image with version-appropriate base image
-6. **q-code-transformation**: Generates dependencies for Q Developer (pre-transformation only)
+6. **q-code-transformation**: Generates dependencies for AWS Transform (pre-transformation only)
 
 **Key Features:**
-- **Pre-transformation**: Uses Java 8 with Maven 3.8 for legacy code
-- **Post-transformation**: Automatically switches to Java 17 with compatible Maven version
-- **Artifact optimization**: Prevents upload size errors while maintaining functionality
-- **Q Developer compatibility**: Provides required job structure and artifacts
+- **Pre-transformation**: Uses Java 8 with Gradle 6.9 for legacy code
+- **Post-transformation**: Automatically switches to Java 17 with compatible Gradle version
+- **Multi-module support**: Builds both main application and utils module
+- **AWS Transform compatibility**: Provides required job structure and artifacts
 
 **Branch Patterns:**
 - Regular branches: Run standard build, test, and package pipeline
-- `q/transform-*` branches: Include Q Developer transformation job for pre-transformation builds
+- `q/transform-*` branches: Include AWS Transform transformation job for pre-transformation builds
 
 ### **Getting Started with CI/CD**
 
@@ -64,42 +64,27 @@ The `.gitlab-ci.yml` file provides:
 3. **Monitor builds**: Check pipeline status in respective CI/CD interface
 4. **Artifacts**: Download generated dependencies or Docker images as needed
 
-Both pipelines are designed to work seamlessly with Amazon Q Developer's code transformation process while providing robust build and deployment capabilities.
+Both pipelines are designed to work seamlessly with AWS Transform's code transformation process while providing robust build and deployment capabilities.
 
 ## **Installation Instructions**
 
 ## Dependencies Setup
 
-Before building the application, you need to install the movie-service-utils dependency in your local Maven repository. This utility library is available in two versions to support different Java versions:
+This project uses Gradle with a multi-module setup. The movie-service-utils dependency is automatically built and included as a project dependency. No manual installation is required.
 
-### For Java 1.8 Version
+### Building the Project
 ```bash
-mvn install:install-file \
-  -Dfile=./movie-service-utils/built-library/0_1_0/movie-service-utils-0.1.0.jar \
-  -DgroupId=com.amazonaws.samples \
-  -DartifactId=movie-service-utils \
-  -Dversion=0.1.0 \
-  -Dpackaging=jar
-```
+# Build the entire project including the utils module
+./gradlew build
 
-### For Java 17 Version
-```bash
-mvn install:install-file \
-  -Dfile=./movie-service-utils/built-library/0_2_0/movie-service-utils-0.2.0.jar \
-  -DgroupId=com.amazonaws.samples \
-  -DartifactId=movie-service-utils \
-  -Dversion=0.2.0 \
-  -Dpackaging=jar
-```
+# Build only the utils module
+./gradlew :movie-service-utils:build
 
-### For Java 21 Version
-```bash
-mvn install:install-file \
-  -Dfile=./movie-service-utils/built-library/0_3_0/movie-service-utils-0.3.0.jar \
-  -DgroupId=com.amazonaws.samples \
-  -DartifactId=movie-service-utils \
-  -Dversion=0.3.0 \
-  -Dpackaging=jar
+# Run tests
+./gradlew test
+
+# Clean and build
+./gradlew clean build
 ```
 
 ## **Local**
@@ -204,34 +189,19 @@ This application has a Caching layer built in to cache the responses from AWS Ap
 
 ## **Installation Instructions**
 
-### For Java 1.8 Version
+### Building with Gradle
 ```bash
-mvn install:install-file \
-  -Dfile=./movie-service-utils/built-library/0_1_0/movie-service-utils-0.1.0.jar \
-  -DgroupId=com.amazonaws.samples \
-  -DartifactId=movie-service-utils \
-  -Dversion=0.1.0 \
-  -Dpackaging=jar
-```
+# Build the entire project (includes movie-service-utils automatically)
+./gradlew build
 
-### For Java 17 Version
-```bash
-mvn install:install-file \
-  -Dfile=./movie-service-utils/built-library/0_2_0/movie-service-utils-0.2.0.jar \
-  -DgroupId=com.amazonaws.samples \
-  -DartifactId=movie-service-utils \
-  -Dversion=0.2.0 \
-  -Dpackaging=jar
-```
+# Run the application locally
+./gradlew bootRun
 
-### For Java 21 Version
-```bash
-mvn install:install-file \
-  -Dfile=./movie-service-utils/built-library/0_3_0/movie-service-utils-0.3.0.jar \
-  -DgroupId=com.amazonaws.samples \
-  -DartifactId=movie-service-utils \
-  -Dversion=0.3.0 \
-  -Dpackaging=jar
+# Run tests
+./gradlew test
+
+# Create distribution JAR
+./gradlew bootJar
 ```
 
 ## **Local**
