@@ -23,15 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import software.amazon.awssdk.services.appconfig.AppConfigClient;
 import software.amazon.awssdk.services.appconfig.model.GetConfigurationResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.validation.Valid;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class MoviesController {
-    private static final Logger logger = LogManager.getLogger(MoviesController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MoviesController.class);
 
     /**
      * Static Movie Array containing all the list of Movies.

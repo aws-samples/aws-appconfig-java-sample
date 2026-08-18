@@ -5,12 +5,13 @@ package com.amazonaws.samples.appconfig.utils;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Encoder {
 
-    Logger logger = Logger.getLogger(Encoder.class.getName());
+    Logger logger = LoggerFactory.getLogger(Encoder.class);
 
     private String unUsedVariable;
 
