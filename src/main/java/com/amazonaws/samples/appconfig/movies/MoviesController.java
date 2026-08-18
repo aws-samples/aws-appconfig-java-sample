@@ -25,7 +25,7 @@ import software.amazon.awssdk.services.appconfig.AppConfigClient;
 import software.amazon.awssdk.services.appconfig.model.GetConfigurationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
